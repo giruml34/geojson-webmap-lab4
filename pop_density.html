@@ -37,7 +37,7 @@
   <div class="map-overlay" id="legend"></div>
 
   <script>
-    mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZ2lydW13IiwiYSI6ImNtaGNsMnczejI4a2cybXB1b3h6dHBuaHkifQ.fO5Cyk2RL57zq0RKG8BDkg';
 
     const map = new mapboxgl.Map({
       container: 'map',
@@ -75,7 +75,6 @@
           }
         });
 
-        // Legend
         const layers = ['0-9','10-19','20-49','50-99','100-199','200-499','500-999','1000 and more'];
         const colors = ['#FFEDA070','#FED97670','#FEB24C70','#FD8D3C70','#FC4E2A70','#E31A1C70','#BD002670','#80002670'];
         const legend = document.getElementById('legend');
@@ -92,7 +91,6 @@
           legend.appendChild(item);
         });
 
-        // Hover
         map.on('mousemove', ({ point }) => {
           const features = map.queryRenderedFeatures(point, { layers: ['stateData-layer'] });
           document.getElementById('text-description').innerHTML = features.length
@@ -106,4 +104,3 @@
   </script>
 </body>
 </html>
-
