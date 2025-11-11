@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Interactive Web Mapping — Population Density</title>
+  <title>US Population Density</title>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script>
@@ -47,7 +47,7 @@
     });
 
     async function geojsonFetch() {
-      const resp = await fetch('assets/stateData.geojson');
+      const resp = await fetch('assets/state_data.geojson');
       const stateData = await resp.json();
 
       map.on('load', () => {
@@ -75,10 +75,16 @@
           }
         });
 
-        const layers = ['0-9','10-19','20-49','50-99','100-199','200-499','500-999','1000 and more'];
-        const colors = ['#FFEDA070','#FED97670','#FEB24C70','#FD8D3C70','#FC4E2A70','#E31A1C70','#BD002670','#80002670'];
+        const layers = [
+          '0-9','10-19','20-49','50-99','100-199','200-499','500-999','1000 and more'
+        ];
+        const colors = [
+          '#FFEDA070','#FED97670','#FEB24C70','#FD8D3C70','#FC4E2A70','#E31A1C70','#BD002670','#80002670'
+        ];
+
         const legend = document.getElementById('legend');
         legend.innerHTML = "<b>Population Density<br>(people/sq.mi.)</b><br><br>";
+
         layers.forEach((layer, i) => {
           const item = document.createElement('div');
           const key = document.createElement('span');
@@ -95,11 +101,12 @@
           const features = map.queryRenderedFeatures(point, { layers: ['stateData-layer'] });
           document.getElementById('text-description').innerHTML = features.length
             ? `<h3>${features[0].properties.name}</h3>
-               <p><strong><em>${features[0].properties.density}</em></strong> people per square mile</p>`
+               <p><strong>${features[0].properties.density}</strong> people per square mile</p>`
             : '<p>Hover over a state!</p>';
         });
       });
     }
+
     geojsonFetch();
   </script>
 </body>
