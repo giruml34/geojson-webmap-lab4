@@ -37,30 +37,18 @@
   <div class="map-overlay" id="legend"></div>
 
   <script>
-    mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZ2lydW13IiwiYSI6ImNtaGNsMnczejI4a2cybXB1b3h6dHBuaHkifQ.fO5Cyk2RL57zq0RKG8BDkg';
 
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v10',
-      center: [-120.5, 47.4],   // Washington State view
+      center: [-120.5, 47.4],   // Washington state view
       zoom: 6.3
     });
 
-    // ======= CHOOSE THE ATTRIBUTE TO MAP =======
-    // Use ONE of: 'fullyVaxPer10k', 'casePer10k', 'deathPer10k'
     const field = 'fullyVaxPer10k';
 
-    // ======= BINS + COLORS (adjust if you switch field) =======
-    // Recommended bins:
-    // - fullyVaxPer10k: [3000, 4000, 5000, 6000, 7000, 8000, 9000]
-    // - casePer10k:     [500, 1000, 1500, 2000, 2500, 3000, 4000]
-    // - deathPer10k:    [1, 2, 3, 4, 5, 6, 8]
-    const bins =
-      field === 'casePer10k'  ? [500, 1000, 1500, 2000, 2500, 3000, 4000] :
-      field === 'deathPer10k' ? [1, 2, 3, 4, 5, 6, 8] :
-                                [3000, 4000, 5000, 6000, 7000, 8000, 9000];
-
-    // Pleasant sequential palette (light -> dark)
+    const bins = [3000, 4000, 5000, 6000, 7000, 8000, 9000];
     const colors = ['#f1eef6','#d4b9da','#c994c7','#df65b0','#e7298a','#ce1256','#91003f','#4d0026'];
 
     function buildStepExpression(attribute, thresholds, palette){
@@ -97,14 +85,8 @@
           }
         });
 
-        // Legend
         const legend = document.getElementById('legend');
-        const titleText =
-          field === 'casePer10k'  ? 'Cases per 10k' :
-          field === 'deathPer10k' ? 'Deaths per 10k' :
-                                    'Fully vaccinated per 10k';
-        legend.innerHTML = `<b>${titleText}</b><br><br>`;
-
+        legend.innerHTML = `<b>Fully vaccinated per 10k</b><br><br>`;
         const labels = makeRangeLabels(bins);
         labels.forEach((label, i) => {
           const item = document.createElement('div');
@@ -118,19 +100,12 @@
           legend.appendChild(item);
         });
 
-        // Hover info
         map.on('mousemove', ({ point }) => {
           const features = map.queryRenderedFeatures(point, { layers: ['covid-fill'] });
           if (features.length) {
             const f = features[0].properties;
-            const value = f[field];
-            const county = f.name || 'Unknown';
-            const label =
-              field === 'casePer10k'  ? 'Cases per 10k' :
-              field === 'deathPer10k' ? 'Deaths per 10k' :
-                                        'Fully vaccinated per 10k';
             document.getElementById('text-description').innerHTML =
-              `<h3>${county} County</h3><p><strong>${value}</strong> ${label}</p>`;
+              `<h3>${f.name} County</h3><p><strong>${f[field]}</strong> fully vaccinated per 10k</p>`;
           } else {
             document.getElementById('text-description').innerHTML = '<p>Hover over a county</p>';
           }
@@ -141,4 +116,3 @@
   </script>
 </body>
 </html>
-
